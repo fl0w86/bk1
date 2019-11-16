@@ -3,7 +3,7 @@ const app = express();
 
 //ROUTE HANDLER
 app.get('/', (req, res) => {
-    res.send({ hi: 'there' })
+    res.send({ hi: 'there yo' })
 })
 
 //IF HEROKU SETS PORT, USE IT, OTHERWISE USE 5000
