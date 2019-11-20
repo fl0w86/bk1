@@ -22,21 +22,15 @@ passport.use(new GoogleStrategy({
     clientSecret: keys.googleClientSecret,
     callbackURL: '/auth/google/callback', //HANDLING AUTH ROUTE REDIRECT
     proxy: true
-}, (accessToken, refreshToken, profile, done) => { //CREATE NEW USER WITH USER SCHEMA
-    User.findOne({
+}, async (accessToken, refreshToken, profile, done) => { //CREATE NEW USER WITH USER SCHEMA
+    const existingUser = await User.findOne({
         googleId: profile.id
     })
-        .then(existingUser => {
-            if (existingUser) {
-                //THERE IS AN EXISTING USER
-                done(null, existingUser);
-            } else {
-                new User({
-                    googleId: profile.id
-                }).save() //save() saved USER TO MONGODB
-                    .then(user => done(null, user))
-            }
-        })
 
-
+    if (existingUser) {
+        //THERE IS AN EXISTING USER
+        return done(null, existingUser);
+    }
+    const user = await new User({ googleId: profile.id }).save() //save() saved USER TO MONGODB
+    done(null, user)
 }));
