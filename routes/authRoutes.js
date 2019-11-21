@@ -1,5 +1,7 @@
 const passport = require('passport');
 
+const requireLogin = require('../middlewares/requireLogin')
+
 module.exports = (app) => {
     app.get('/auth/google', passport.authenticate('google', {  //HANDLE AUTH ROUTE APP -> PASSPORT -> GOOGLE
         scope: ['profile', 'email']
@@ -20,6 +22,10 @@ module.exports = (app) => {
 
     app.get('/api/current_user', (req, res) => { //FOR USER AUTH TESTING
         res.send(req.user);
+    })
+
+    app.get('/api/secret', requireLogin, (req, res) => { //TEST MIT MIDDLEWARE UND ROUTE PROTECTION MIT DATABASE
+
     })
 }
 
